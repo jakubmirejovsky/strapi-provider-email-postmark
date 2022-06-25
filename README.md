@@ -10,10 +10,10 @@ You will need to have the plugin `strapi-plugin-email` installed in you Strapi p
 
 ```
 # using yarn
-yarn add strapi-provider-email-postmark
+yarn add strapi-v4-provider-email-postmark
 
 # using npm
-npm i strapi-provider-email-postmark
+npm i strapi-v4-provider-email-postmark
 ```
 
 # Configuration
@@ -39,30 +39,24 @@ module.exports = ({ env }) => ({
   // ...
   email: {
     config: {
-      provider: "strapi-provider-email-postmark",
+      provider: "strapi-v4-provider-email-postmark",
       providerOptions: {
-        apiKey: "your-postmark-api-key",
+        apiKey: env("POSTMARK_API_KEY"),
       },
       settings: {
-        defaultMessageStream: "my-stream",
-        defaultFrom: "john.doe@ijs.to",
-        defaultTo: "john.doe@ijs.to",
-        defaultReplyTo: "code@ijs.to",
+        defaultMessageStream: env("POSTMARK_STREAM"),
+        defaultFrom: env("POSTMARK_FROM"),
+        defaultTo: env("POSTMARK_TO"),
+        defaultReplyTo: env("POSTMARK_REPLY_TO"),
         defaultVariables: {
-          sentBy: 'strapi',
+          sentBy: "strapi",
         },
       },
-    }
+    },
   },
   // ...
 });
 ```
-
-**IMPORTANT:** With Strapi v4, you have to set `email.config.provider` to "strapi-provider-email-postmark", instead of "postmark". This is intended in Strapi v4: https://github.com/strapi/strapi/issues/11879.
-
-Additionally, the structure of `plugins.js` has changed:
-- In v3: `"email": {"provider": "", ...}`
-- In v4: `"email": {"config": {"provider": "", ...}}`
 
 ### Usage
 
@@ -71,7 +65,7 @@ Call the `send` function on the email service, as you would for any strapi email
 ```javascript
 await strapi.plugins.email.services.email.send({
   to: "john.doe@ijs.to",
-  text: "Hello John"
+  text: "Hello John",
 });
 ```
 
@@ -82,8 +76,8 @@ await strapi.plugins.email.services.email.send({
   to: "john.doe@ijs.to",
   templateAlias: "code-your-own",
   variables: {
-    name: "John"
-  }
+    name: "John",
+  },
 });
 ```
 
